@@ -12,17 +12,16 @@ fun main() {
 
 
     fun parsePairs(input: List<String>) = input
-        .associate { toPair(it, ",") }
-        .map { it.key.toRange() to it.value.toRange() }
+        .map { toPair(it, ",") }
+        .map { it.first.toRange() to it.second.toRange() }
         .toList()
 
     infix fun IntRange.fullyContains(other: IntRange) =
         this.all { it in other }
 
     fun Pair<IntRange, IntRange>.overlaps(): Boolean {
-        val firstInSecond = (second.first <= first.first) and (first.last <= second.last)
-        val secondInFirst = (first.first <= second.first) and (second.last <= first.last)
-        print("Range [$this] - firstInSecond: $firstInSecond - secondInFirst: $secondInFirst - overall: ")
+        val firstInSecond = second fullyContains first
+        val secondInFirst = first fullyContains second
         return (firstInSecond or secondInFirst).also(::println)
     }
 
