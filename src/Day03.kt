@@ -1,3 +1,8 @@
+private fun <E> List<E>.toTriple(): Triple<E, E, E> {
+    assert(this.size == 3)
+    return Triple(this[0], this[1], this[2])
+}
+
 fun main() {
 
     val lowerPriorities =
@@ -19,6 +24,16 @@ fun main() {
         throw IllegalStateException("No common character found between halves of [$backPack]!")
     }
 
+    fun findCommonItem(backPacks: Triple<String, String, String>): Char {
+        for (i in backPacks.first) {
+            val regex = i.toString().toRegex()
+            if (backPacks.second.contains(regex) && backPacks.third.contains(regex)) {
+                return i
+            }
+        }
+        throw IllegalStateException("No common character found between three parts of [$backPacks]!")
+    }
+
     fun toPriority(c: Char): Int {
         return lowerPriorities[c] ?: upperPriorities[c]
         ?: throw IllegalStateException("No priority found for [$c]!")
@@ -34,7 +49,13 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        return input
+            .asSequence()
+            .chunked(3)
+            .map { it.toTriple() }
+            .map(::findCommonItem)
+            .map(::toPriority)
+            .sum()
     }
 
     // test if implementation meets criteria from the description, like:
@@ -46,7 +67,7 @@ fun main() {
     println("Part 1: ${part1(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = 1)
+    ::part2.forInput(testInput, returns = 70)
     println("Part 2: ${part2(input)}")
 }
 
