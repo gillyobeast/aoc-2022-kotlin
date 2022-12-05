@@ -15,9 +15,9 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-fun ((List<String>) -> Int).forInput(
+fun<T> ((List<String>) -> T).forInput(
     input: List<String>,
-    returns: Int
+    returns: T
 ) {
     val output = this(input)
     check(output == returns) { "expected $returns but was $output" }
