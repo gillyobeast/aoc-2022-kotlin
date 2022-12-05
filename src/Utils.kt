@@ -19,5 +19,6 @@ fun ((List<String>) -> Int).forInput(
     input: List<String>,
     returns: Int
 ) {
-    check(this(input) == returns) { "expected $returns but was ${this(input)}" }
+    val output = this(input)
+    check(output == returns) { "expected $returns but was $output" }
 }
