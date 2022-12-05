@@ -19,22 +19,25 @@ fun main() {
     infix fun IntRange.fullyContains(other: IntRange) =
         this.all { it in other }
 
-    fun Pair<IntRange, IntRange>.overlaps(): Boolean {
+    fun Pair<IntRange, IntRange>.overlapsFully(): Boolean {
         val firstInSecond = second fullyContains first
         val secondInFirst = first fullyContains second
-        return (firstInSecond or secondInFirst).also(::println)
+        return (firstInSecond or secondInFirst)
     }
+
+    fun Pair<IntRange, IntRange>.overlaps(): Boolean =
+        first.any { it in second }
 
 
     fun part1(input: List<String>): Int {
-        val (overlaps, _) = parsePairs(input)
-            .partition { it.overlaps() }
 
-        return overlaps.size
+        return parsePairs(input)
+            .count { it.overlapsFully() }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        return parsePairs(input)
+            .count { it.overlaps() }
     }
 
     // test if implementation meets criteria from the description, like:
@@ -46,7 +49,7 @@ fun main() {
     println("Part 1: ${part1(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = 1)
+    ::part2.forInput(testInput, returns = 4)
     println("Part 2: ${part2(input)}")
 }
 
