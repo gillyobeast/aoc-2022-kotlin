@@ -1,5 +1,5 @@
 fun main() {
-    fun maxTotalCalories(input: List<String>): Int {
+    fun caloriesPerElf(input: List<String>): MutableList<Int> {
         val elvesCalories = mutableListOf<Int>()
         var total = 0
         input.forEach {
@@ -10,20 +10,30 @@ fun main() {
                 total += it.toInt()
             }
         }
-        return elvesCalories.max()
+        elvesCalories.add(total)
+        return elvesCalories
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    fun maxTotalCalories(input: List<String>): Int {
+        return caloriesPerElf(input)
+            .max()
+    }
+
+    fun totalCaloriesForTop3Elves(input: List<String>): Int {
+        return caloriesPerElf(input)
+            .sortedDescending()
+            .take(3)
+//            .also(::println)
+            .sum()
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day01_test")
     ::maxTotalCalories.forInput(testInput, returns = 24000)
-    ::part2.forInput(testInput, returns = 45000)
+    ::totalCaloriesForTop3Elves.forInput(testInput, returns = 45000)
 
     val input = readInput("Day01")
-    println(maxTotalCalories(input))
-    println(part2(input))
+    println("Max total calories: ${maxTotalCalories(input)}")
+    println("Top 3 elves' total: ${totalCaloriesForTop3Elves(input)}")
 }
 
