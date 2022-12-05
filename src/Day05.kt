@@ -2,9 +2,10 @@ import java.util.*
 
 fun main() {
 
-    val whitespace = "\\s+".toRegex()
+    val whitespace = "\\s".toRegex()
+
     fun List<String>.extractIndices(): List<String> {
-        return last().split(whitespace).filter(String::isNotBlank)
+        return last().chunked(4).filter(String::isNotBlank)
     }
 
     fun parse(input: List<String>): Pair<List<String>, List<String>> = input
@@ -12,11 +13,13 @@ fun main() {
         .partition { it.startsWith("move") }
 
     fun String.extractLabel(): Char {
-        return this[1]
+        return if (this.length > 1) this[1] else this[0]
     }
 
+    fun String.stripSpaces(): String = replace(whitespace, "")
+
     fun buildStacks(stackData: List<String>): List<Stack<Char>> {
-        val numberOfStacks = stackData.extractIndices().last()
+        val numberOfStacks = stackData.extractIndices().last().stripSpaces()
 
         val stacks = mutableListOf<Stack<Char>>()
         repeat(numberOfStacks.toInt()) {
@@ -24,9 +27,10 @@ fun main() {
         }
 
         stackData.dropLast(1).forEach {
-            it.split(whitespace).forEachIndexed { idx, item ->
-                if (item.isNotEmpty())
+            it.chunked(4).forEachIndexed { idx, item ->
+                if (item.isNotBlank()) {
                     stacks[idx].push(item.extractLabel())
+                }
             }
         }
         return stacks.onEach { it.reverse() }.toList()
@@ -39,7 +43,7 @@ fun main() {
         val source = stacks[split[3].toInt() - 1]
         val target = stacks[split[5].toInt() - 1]
 
-        repeat(count){
+        repeat(count) {
             target.push(source.pop())
         }
     }
@@ -53,7 +57,7 @@ fun main() {
         val (instructions, stackData) = parse(input)
 
         val stacks = buildStacks(stackData)
-        println("stacks = ${stacks}")
+//        println("stacks = ${stacks}")
 
         instructions.applyTo(stacks)
 
