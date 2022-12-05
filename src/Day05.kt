@@ -36,15 +36,31 @@ fun main() {
         return stacks.onEach { it.reverse() }.toList()
     }
 
-
-    fun String.applyTo(stacks: List<Stack<Char>>) {
+    fun String.triple(stacks: List<Stack<Char>>): Triple<Int, Stack<Char>, Stack<Char>> {
         val split = this.split(whitespace)
         val count = split[1].toInt()
         val source = stacks[split[3].toInt() - 1]
         val target = stacks[split[5].toInt() - 1]
+        return Triple(count, source, target)
+    }
+
+    fun String.applyTo(stacks: List<Stack<Char>>) {
+        val (count, source, target) = triple(stacks)
 
         repeat(count) {
             target.push(source.pop())
+        }
+    }
+
+    fun String.applyToPart2(stacks: List<Stack<Char>>) {
+        val (count, source, target) = triple(stacks)
+
+        val temp = Stack<Char>()
+        repeat(count) {
+            temp.push(source.pop())
+        }
+        repeat(count) {
+            target.push(temp.pop())
         }
     }
 
@@ -52,12 +68,15 @@ fun main() {
         forEach { it.applyTo(stacks) }
     }
 
+    fun List<String>.applyToPart2(stacks: List<Stack<Char>>) {
+        forEach { it.applyToPart2(stacks) }
+    }
+
     fun part1(input: List<String>): String {
 
         val (instructions, stackData) = parse(input)
 
         val stacks = buildStacks(stackData)
-//        println("stacks = ${stacks}")
 
         instructions.applyTo(stacks)
 
@@ -66,7 +85,14 @@ fun main() {
     }
 
     fun part2(input: List<String>): String {
-        return input.size.toString()
+
+        val (instructions, stackData) = parse(input)
+
+        val stacks = buildStacks(stackData)
+
+        instructions.applyToPart2(stacks)
+
+        return stacks.map { it.pop() }.joinToString("")
     }
 
     // test if implementation meets criteria from the description, like:
@@ -78,7 +104,7 @@ fun main() {
     println("Part 1: ${part1(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = 12)
+    ::part2.forInput(testInput, returns = "MCD")
     println("Part 2: ${part2(input)}")
 }
 
