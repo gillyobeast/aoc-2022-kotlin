@@ -1,6 +1,16 @@
 fun main() {
     fun maxTotalCalories(input: List<String>): Int {
-        return input.size
+        val elvesCalories = mutableListOf<Int>()
+        var total = 0
+        input.forEach{
+            if (it.isBlank()){
+                elvesCalories.add(total)
+                total = 0
+            }
+            else
+                total += it.toInt()
+        }
+        return elvesCalories.max()
     }
 
     fun part2(input: List<String>): Int {
