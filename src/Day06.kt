@@ -1,30 +1,16 @@
-private fun String.hasNoDuplicates(): Boolean {
-    return this
-        .groupBy { it }
-        .all { it.value.size == 1 }
-}
-
 fun main() {
 
-
-    fun findIndexOfUniqueSubstring(ofLength: Int, input: String): Int {
-        input.windowed(ofLength)
-            .forEachIndexed { idx, substring ->
-                if (substring.length == ofLength && substring.hasNoDuplicates()) {
-                    return idx + ofLength
-                }
-            }
-
-        throw Exception("No run of $ofLength distinct chars found.")
+    fun String.findIndexOfUniqueSubstring(ofLength: Int): Int {
+        return windowed(ofLength)
+            .indexOfFirst { it.toSet().size == ofLength } + ofLength
     }
 
     fun part1(input: String): Int {
-
-        return findIndexOfUniqueSubstring(ofLength = 4, input)
+        return input.findIndexOfUniqueSubstring(ofLength = 4)
     }
 
     fun part2(input: String): Int {
-        return findIndexOfUniqueSubstring(ofLength = 14, input)
+        return input.findIndexOfUniqueSubstring(ofLength = 14)
     }
 
 // test if implementation meets criteria from the description, like:
