@@ -24,7 +24,7 @@ fun main() {
     }
 
     fun part2(input: String): Int {
-        return input.length
+        return findIndexOfUniqueSubstring(ofLength = 14, input)
     }
 
 // test if implementation meets criteria from the description, like:
@@ -40,7 +40,11 @@ fun main() {
     println("Part 1: ${part1(input.first())}")
 
 // part 2
-    ::part2.appliedTo("testInput", returns = -1)
+    ::part2.appliedTo("mjqjpqmgbljsphdztnvjfqwrcgsmlb", returns = 19)
+    ::part2.appliedTo("bvwbjplbgvbhsrlpgdmjqwftvncz", returns = 23)
+    ::part2.appliedTo("nppdvjthqldpwncqszvftbrmjlhg", returns = 23)
+    ::part2.appliedTo("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", returns = 29)
+    ::part2.appliedTo("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", returns = 26)
     println("Part 2: ${part2(input.first())}")
 }
 
