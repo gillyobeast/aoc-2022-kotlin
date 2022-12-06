@@ -1,7 +1,7 @@
 fun main() {
 
     fun String.findIndexOfUniqueSubstring(ofLength: Int): Int {
-        return windowed(ofLength) { it.toSet().size == ofLength }
+        return windowedSequence(ofLength) { it.toSet().size == ofLength }
             .indexOfFirst { it /* == true */ } + ofLength
     }
 
