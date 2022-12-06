@@ -45,11 +45,11 @@ fun main() {
     val input = readInput("input")
 
     // part 1
-    ::part1.forInput(testInput, returns = 2)
+    ::part1.appliedTo(testInput, returns = 2)
     println("Part 1: ${part1(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = 4)
+    ::part2.appliedTo(testInput, returns = 4)
     println("Part 2: ${part2(input)}")
 }
 

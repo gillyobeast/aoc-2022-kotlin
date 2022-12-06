@@ -14,11 +14,11 @@ fun main() {
     val input = readInput("input")
 
     // part 1
-    ::part1.forInput(testInput, returns = -1)
+    ::part1.appliedTo(testInput, returns = -1)
     println("Part 1: ${part1(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = -1)
+    ::part2.appliedTo(testInput, returns = -1)
     println("Part 2: ${part2(input)}")
 }
 

@@ -15,8 +15,8 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
     .toString(16)
     .padStart(32, '0')
 
-fun<T> ((List<String>) -> T).forInput(
-    input: List<String>,
+fun<L, T> ((L) -> T).appliedTo(
+    input: L,
     returns: T
 ) {
     val output = this(input)

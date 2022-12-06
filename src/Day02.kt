@@ -88,11 +88,11 @@ fun main() {
     val input = readInput("Day02")
 
     // part 1
-    ::totalRpsScore.forInput(testInput, returns = 15)
+    ::totalRpsScore.appliedTo(testInput, returns = 15)
     println("Part 1: ${totalRpsScore(input)}")
 
     // part 2
-    ::part2.forInput(testInput, returns = 12)
+    ::part2.appliedTo(testInput, returns = 12)
     println("Part 2: ${part2(input)}")
 }
 

@@ -29,8 +29,8 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day01_test")
-    ::maxTotalCalories.forInput(testInput, returns = 24000)
-    ::totalCaloriesForTop3Elves.forInput(testInput, returns = 45000)
+    ::maxTotalCalories.appliedTo(testInput, returns = 24000)
+    ::totalCaloriesForTop3Elves.appliedTo(testInput, returns = 45000)
 
     val input = readInput("Day01")
     println("Max total calories: ${maxTotalCalories(input)}")
