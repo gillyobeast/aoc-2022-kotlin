@@ -18,15 +18,12 @@ import readInput
 //  then traverse the tree, grabbing all `dir`s with size < limit and adding to list:
 //  list.sumOf { it.size }
 
-private val root = Directory("/")
-
 private val whitespace = "\\s".toRegex()
 
 private val newline = "\\n".toRegex()
 
-
 fun part1(input: List<String>): Int {
-    val tree: FsObject = root
+    val tree: FsObject = Directory("/")
     var currentDirectory: FsObject = tree
 
     input.joinToString("\n")
@@ -62,8 +59,8 @@ fun part1(input: List<String>): Int {
     println(tree.toString())
 
 
-
-    return tree.findDirectoriesSmallerThan(100_000)
+    val directories = tree.findDirectoriesSmallerThan(100_000)
+    return directories
         .sumOf { it.sizeOnDisk() }
 }
 
