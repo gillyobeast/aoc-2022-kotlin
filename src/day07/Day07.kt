@@ -22,7 +22,7 @@ private val whitespace = "\\s".toRegex()
 
 private val newline = "\\n".toRegex()
 
-private fun buildTree(input: List<String>): FsObject {
+private fun buildFs(input: List<String>): FsObject {
     val tree: FsObject = Directory("/")
     var currentDirectory: FsObject = tree
 
@@ -61,19 +61,20 @@ private fun buildTree(input: List<String>): FsObject {
 
 fun part1(input: List<String>): Int {
 
-    return buildTree(input)
-        .findDirectoriesInRange(1..100_000)
+    return buildFs(input)
+        .directoriesInRange(1..100_000)
         .sumOf { it.size }
 }
 
+// need directory x s.t. x.size is minimised and
+//      tree.size - x.size < 70_000_000 - 30_000_000 = 40_000_000
 fun part2(input: List<String>): Int {
 
-    val tree = buildTree(input)
-    val size: Int = tree.size
-    println("size = $size")
-    return tree
-        .findDirectoriesInRange(1..70_000_000) // any size
-        .filter { size - it.size < 30_000_000 }
+    val fileSystem = buildFs(input)
+
+    return fileSystem
+        .allDirectories()
+        .filter { fileSystem.size - it.size < 40_000_000 }
         .minOf { it.size }
 }
 
@@ -160,19 +161,19 @@ sealed class FsObject(private val name: String) {
         return children.find { it.name == name } ?: addChild(Directory(name))
     }
 
-    fun findDirectoriesInRange(intRange: IntRange): List<FsObject> {
-        val directories = mutableListOf<FsObject>()
+    fun directoriesInRange(intRange: IntRange): List<FsObject> {
+        return allDirectories().filter { it.size in intRange }
+    }
 
-        if (size in intRange && this is Directory) {
-            directories.add(this)
-        }
-        children
+    fun allDirectories(): List<FsObject> {
+        if (this is File) return emptyList()
+
+        val directories = mutableListOf(this)
+        directories.addAll(children
             .filterIsInstance<Directory>()
-            .forEach {
-                directories.addAll(it.findDirectoriesInRange(intRange))
-            }
-
-
+            .flatMap {
+                it.allDirectories()
+            })
         return directories
     }
 
