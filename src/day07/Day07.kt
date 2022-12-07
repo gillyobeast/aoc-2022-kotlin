@@ -70,9 +70,10 @@ fun part2(input: List<String>): Int {
 
     val tree = buildTree(input)
     val size: Int = tree.size
-    println("size = ${size}")
+    println("size = $size")
     return tree
-        .findDirectoriesInRange(1..100_000)
+        .findDirectoriesInRange(1..70_000_000) // any size
+        .filter { size - it.size < 30_000_000 }
         .minOf { it.size }
 }
 
@@ -85,12 +86,14 @@ fun main() {
     // part 1
     ::part1.appliedTo(testInput, returns = 95437)
     val part1 = part1(input)
-    check(part1 != 2127288) { "Shouldn't be 2127288!" }
     println("Part 1: $part1")
+    check(part1 != 2127288) { "Shouldn't be 2127288!" }
 
     // part 2
     ::part2.appliedTo(testInput, returns = 24933642)
-    println("Part 2: ${part2(input)}")
+    val part2 = part2(input)
+    println("Part 2: $part2")
+    check(part2 != 14694309) { "Shouldn't be 14694309!" }
 }
 
 class File(name: String) : FsObject(name) {
