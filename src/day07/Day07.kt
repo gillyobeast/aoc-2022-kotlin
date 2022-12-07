@@ -71,6 +71,7 @@ fun part1(input: List<String>): Int {
 fun part2(input: List<String>): Int {
 
     val fileSystem = buildFs(input)
+    println(fileSystem.toString())
 
     return fileSystem
         .allDirectories()
