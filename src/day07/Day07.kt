@@ -149,7 +149,10 @@ sealed class FsObject(private val name: String) {
     }
 
     override fun toString(): String {
-        var name = "${"\t".repeat(depth())}- $name (size = ${size}, ${type()})"
+        var name =
+            "\t".repeat(depth()) +
+                    (if (this is File) "-" else "\\") + " " +
+                    name + " (size = " + size + ", " + type() + ")"
         if (children.isNotEmpty()) {
             name += children.joinToString("") { "\n$it" }
         }
