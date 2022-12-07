@@ -18,15 +18,21 @@ import readInput
 //  then traverse the tree, grabbing all `dir`s with size < limit and adding to list
 //  list.sumOf { it.size }
 
-private val ROOT = FileOrDirectory("/", Directory)
+private val ROOT = Directory("/")
 
 private val whitespace = "\\s".toRegex()
 
 val newline = "\\n".toRegex()
 
+fun findDirectoriesSmallerThan(upperLimit: Int, inDirectory: FsObject): List<FsObject> {
+    val directories = mutableListOf<FsObject>()
+
+    return directories
+}
+
 fun part1(input: List<String>): Int {
-    val tree: FileOrDirectory = ROOT
-    var currentDirectory: FileOrDirectory = tree
+    val tree: FsObject = ROOT
+    var currentDirectory: FsObject = tree
 
     input.joinToString("\n")
         .split("\\\$".toRegex())
@@ -40,12 +46,9 @@ fun part1(input: List<String>): Int {
                 val dirname = args[2]
                 currentDirectory =
                     if (dirname == "..") {
-                        currentDirectory.parent ?: run {
-                            println("Cannot go up from $currentDirectory with $it")
-                            tree
-                        }
+                        currentDirectory.parent!!
                     } else {
-                        currentDirectory[dirname, Directory]
+                        currentDirectory.getOrAddDir(dirname)
                     }
             } else { // ls
                 lines.drop(1) // ignore the ls
@@ -54,9 +57,9 @@ fun part1(input: List<String>): Int {
                         it.split(newline).forEach {
                             val response = it.split(whitespace)
                             if (response[0] == "dir") {
-                                currentDirectory[response[1], Directory]
+                                currentDirectory.addChild(Directory(response[0]))
                             } else { // file
-                                val child = currentDirectory.addChild(response[1], File)
+                                val child = currentDirectory.addChild(File(response[1]))
                                 child.size = response[0].toInt()
                             }
                         }
@@ -67,16 +70,9 @@ fun part1(input: List<String>): Int {
 
 
 
-    return tree.size
+    return findDirectoriesSmallerThan(100_000, inDirectory = tree)
+        .sumOf { it.size }
 }
-//
-//private fun <T> Sequence<T>.third(): T {
-//    return drop(2).first()
-//}
-//
-//private fun <T> Sequence<T>.second(): T {
-//    return drop(1).first()
-//}
 
 fun part2(input: List<String>): Int {
     return input.size
@@ -97,34 +93,28 @@ fun main() {
     println("Part 2: ${part2(input)}")
 }
 
-
-sealed class Type
-object File : Type() {
-    override fun toString() = "file"
+class File(name: String) : FsObject(name) {
+    override fun type(): String = "file"
 }
 
-object Directory : Type() {
-    override fun toString() = "dir"
+class Directory(name: String) : FsObject(name) {
+    override fun type(): String = "dir"
 
 }
 
 
-class FileOrDirectory(private val name: String, private val type: Type) {
-    var parent: FileOrDirectory? = null
+abstract class FsObject(private val name: String) {
+    var parent: FsObject? = null
 
-    private val children: MutableList<FileOrDirectory> = mutableListOf()
+    val children: MutableList<FsObject> = mutableListOf()
 
     var size: Int = 0
         get() = if (field != 0) field else children.sumOf { it.size }
 
-    fun addChild(child: FileOrDirectory): FileOrDirectory {
+    fun addChild(child: FsObject): FsObject {
         children.add(child)
         child.parent = this
         return child
-    }
-
-    fun addChild(name: String, type: Type): FileOrDirectory {
-        return addChild(FileOrDirectory(name, type))
     }
 
     fun depth(): Int {
@@ -138,14 +128,16 @@ class FileOrDirectory(private val name: String, private val type: Type) {
     }
 
     override fun toString(): String {
-        var name = "${"\t".repeat(depth())}- $name ($type, size = ${size})"
-        if (!children.isEmpty()) {
-            name += children.joinToString { "\n$it " }
+        var name = "${"\t".repeat(depth())}- $name (size = ${size}, ${type()})"
+        if (children.isNotEmpty()) {
+            name += children.joinToString("") { "\n$it" }
         }
         return name
     }
 
-    operator fun get(name: String, type: Type): FileOrDirectory {
-        return children.find { it.name == name } ?: addChild(name, type)
+    abstract fun type(): String
+
+    fun getOrAddDir(name: String): FsObject {
+        return children.find { it.name == name } ?: addChild(Directory(name))
     }
 }
