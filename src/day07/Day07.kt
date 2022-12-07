@@ -22,7 +22,7 @@ private val whitespace = "\\s".toRegex()
 
 private val newline = "\\n".toRegex()
 
-fun part1(input: List<String>): Int {
+private fun buildTree(input: List<String>): FsObject {
     val tree: FsObject = Directory("/")
     var currentDirectory: FsObject = tree
 
@@ -56,16 +56,24 @@ fun part1(input: List<String>): Int {
 
             }
         }
-    println(tree.toString())
+    return tree
+}
 
+fun part1(input: List<String>): Int {
 
-    val directories = tree.findDirectoriesSmallerThan(100_000)
-    return directories
-        .sumOf { it.sizeOnDisk() }
+    return buildTree(input)
+        .findDirectoriesInRange(1..100_000)
+        .sumOf { it.size }
 }
 
 fun part2(input: List<String>): Int {
-    return input.size
+
+    val tree = buildTree(input)
+    val size: Int = tree.size
+    println("size = ${size}")
+    return tree
+        .findDirectoriesInRange(1..100_000)
+        .minOf { it.size }
 }
 
 fun main() {
@@ -81,7 +89,7 @@ fun main() {
     println("Part 1: $part1")
 
     // part 2
-    ::part2.appliedTo(testInput, returns = -1)
+    ::part2.appliedTo(testInput, returns = 24933642)
     println("Part 2: ${part2(input)}")
 }
 
@@ -105,11 +113,10 @@ sealed class FsObject(private val name: String) {
     val children: MutableList<FsObject> = mutableListOf()
 
     var size: Int = 0
-
-    fun sizeOnDisk(): Int {
-        val childFiles = getChildFiles()
-        return childFiles.sumOf { it.size }
-    }
+        get() {
+            return if (this is File) field
+            else getChildFiles().sumOf { it.size }
+        }
 
     fun addChild(child: FsObject): FsObject {
         children.add(child)
@@ -137,7 +144,7 @@ sealed class FsObject(private val name: String) {
     }
 
     override fun toString(): String {
-        var name = "${"\t".repeat(depth())}- $name (size = ${sizeOnDisk()}, ${type()})"
+        var name = "${"\t".repeat(depth())}- $name (size = ${size}, ${type()})"
         if (children.isNotEmpty()) {
             name += children.joinToString("") { "\n$it" }
         }
@@ -150,19 +157,20 @@ sealed class FsObject(private val name: String) {
         return children.find { it.name == name } ?: addChild(Directory(name))
     }
 
-    fun findDirectoriesSmallerThan(upperLimit: Int): List<FsObject> {
+    fun findDirectoriesInRange(intRange: IntRange): List<FsObject> {
         val directories = mutableListOf<FsObject>()
 
-        if (sizeOnDisk() in 1..upperLimit && this is Directory) {
+        if (size in intRange && this is Directory) {
             directories.add(this)
         }
         children
             .filterIsInstance<Directory>()
             .forEach {
-                directories.addAll(it.findDirectoriesSmallerThan(upperLimit))
+                directories.addAll(it.findDirectoriesInRange(intRange))
             }
 
 
         return directories
     }
+
 }
