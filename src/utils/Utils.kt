@@ -25,7 +25,10 @@ fun <L, T> ((L) -> T).appliedTo(
     check(output == returns) { "expected $returns but was $output" }
 }
 
-fun List<List<Int>>.prettyPrint() {
+
+typealias Matrix<E> = List<List<E>>
+
+fun Matrix<Int>.prettyPrint() {
     println(joinToString("\n"))
 }
 
@@ -34,21 +37,21 @@ fun <T> T.shouldNotBe(equalTo: T): T {
     return this
 }
 
-fun List<List<Int>>.transposed(): List<List<Int>> {
+fun <E> Matrix<E>.transposed(): Matrix<E> {
     checkSquare()
-    val copy = mutableListOf<MutableList<Int>>()
+    val copy = mutableListOf<List<E>>()
     for (i: Int in 0..this.lastIndex) {
-        val list = mutableListOf<Int>()
+        val list = mutableListOf<E>()
         for (j: Int in 0..this[i].lastIndex) {
             list.add(j, this[j][i])
         }
-        copy.add(list)
+        copy.add(list.toList())
     }
 
-    return copy
+    return copy.toList()
 }
 
-private fun List<List<Int>>.checkSquare() {
+private fun <E> Matrix<E>.checkSquare() {
     forEach { check(it.size == this[0].size) { "Non-square matrix passed to transpose" } }
 }
 
@@ -57,6 +60,6 @@ fun List<Int>.beforeAndAfter(index: Int): Pair<List<Int>, List<Int>> {
     return subList(0, index) to subList(index + 1, size)
 }
 
-fun List<List<Int>>.column(i: Int): List<Int> {
+fun <E> Matrix<E>.column(i: Int): List<E> {
     return map { it[i] }.toList()
 }

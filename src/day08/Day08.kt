@@ -6,21 +6,33 @@ fun part1(input: List<String>): Int {
     return countVisible(matrixOf(input))
 }
 
-private fun countVisible(matrix: List<List<Int>>): Int {
+private fun countVisible(matrix: Matrix<Int>): Int {
     var visible = 0
-    matrix.forEachIndexed { rowIndex, row ->
-        row.forEachIndexed { colIndex, tree ->
-            val column = matrix.column(colIndex)
-            val (treesBefore, treesAfter) = row.beforeAndAfter(colIndex)
-            val (treesAbove, treesBelow) = column.beforeAndAfter(rowIndex)
-            if (!treesBefore.blocks(tree)
-                || !treesAfter.blocks(tree)
-                || !treesAbove.blocks(tree)
-                || !treesBelow.blocks(tree)
-            ) visible++
-        }
+
+    matrix.iterate { rowIndex, colIndex ->
+        val row = matrix[rowIndex]
+        val column = matrix.column(colIndex)
+        val tree = row[colIndex]
+        val (treesBefore, treesAfter) = row.beforeAndAfter(colIndex)
+        val (treesAbove, treesBelow) = column.beforeAndAfter(rowIndex)
+        if (!treesBefore.blocks(tree)
+            || !treesAfter.blocks(tree)
+            || !treesAbove.blocks(tree)
+            || !treesBelow.blocks(tree)
+        ) visible++
     }
     return visible
+}
+
+private fun <E> Matrix<E>.iterate(block: (Int, Int) -> Unit) {
+    indices.forEach { rowIndex ->
+        this[rowIndex].indices.forEach { colIndex ->
+            block(
+                rowIndex,
+                colIndex
+            )
+        }
+    }
 }
 
 private fun List<Int>.blocks(tree: Int) = any { it >= tree }
@@ -34,7 +46,12 @@ private fun matrixOf(input: List<String>) = input.map {
 
 
 fun part2(input: List<String>): Int {
-    return input.size
+    val matrix = matrixOf(input)
+
+    // from each tree (iterate over row and column
+
+
+    return matrix.size
 }
 
 fun main() {
@@ -49,7 +66,7 @@ fun main() {
 
 
     // part 2
-    ::part2.appliedTo(testInput, returns = -1)
+    ::part2.appliedTo(testInput, returns = 8)
     println("Part 2: ${part2(input)}")
 }
 
