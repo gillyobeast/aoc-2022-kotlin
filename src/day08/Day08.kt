@@ -3,36 +3,39 @@ package day08
 import utils.appliedTo
 import utils.readInput
 import utils.shouldNotBe
-import utils.transposed
 
 fun part1(input: List<String>): Int {
     val matrix: List<List<Int>> = matrixOf(input)
 
-    var visible = countVisible(matrix)
-    println()
-    visible += countVisible(matrix.transposed())
-
-//    matrix.apply { prettyPrint() }
-//        .transposed().prettyPrint()
-
-    return visible
+    return countVisible(matrix)
 }
 
 private fun countVisible(matrix: List<List<Int>>): Int {
     var visible = 0
     matrix.forEachIndexed { i, row ->
-        row.forEachIndexed { j, value ->
-//            println("row = ${row}")
-//            println("idx = ${idx}")
-            val before = row.subList(0, j)
-            val after = row.subList(j + 1, row.size)
-            print("${before} "); print("[$value]");println(" ${after}")
-            if (before.all { it < value }
-                || after.all { it < value }) visible++
+        row.forEachIndexed { j, tree ->
+            val column = matrix.column(j)
+            val treesBefore = row.subList(0, j)
+            val treesAfter = row.subList(j + 1, row.size)
+            val treesAbove = column.subList(0, i)
+            val treesBelow = column.subList(i + 1, column.size)
+            print("${treesAbove.ifEmpty { "" }} [$tree] ${treesBelow.ifEmpty { "" }}\n")
+
+            if (!treesBefore.blocks(tree)
+                || !treesAfter.blocks(tree)
+                || !treesAbove.blocks(tree)
+                || !treesBelow.blocks(tree)
+            ) visible++
         }
     }
     return visible
 }
+
+private fun List<List<Int>>.column(i: Int): List<Int> {
+    return map { it[i] }.toList()
+}
+
+private fun List<Int>.blocks(tree: Int) = any { it >= tree }
 
 private fun matrixOf(input: List<String>) = input.map {
     it.split("")
