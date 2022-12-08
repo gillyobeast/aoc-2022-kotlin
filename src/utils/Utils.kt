@@ -51,3 +51,12 @@ fun List<List<Int>>.transposed(): List<List<Int>> {
 private fun List<List<Int>>.checkSquare() {
     forEach { check(it.size == this[0].size) { "Non-square matrix passed to transpose" } }
 }
+
+
+fun List<Int>.beforeAndAfter(index: Int): Pair<List<Int>, List<Int>> {
+    return subList(0, index) to subList(index + 1, size)
+}
+
+fun List<List<Int>>.column(i: Int): List<Int> {
+    return map { it[i] }.toList()
+}
