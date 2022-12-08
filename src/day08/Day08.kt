@@ -44,7 +44,7 @@ fun part2(input: List<String>): Int {
     val matrix = matrixOf(input)
 
     var maxScenicScore = 0
-    var maxTree = 0 to 0
+    var maxTree = -1 to -1
 
     // from each tree, calculate view distance in each direction
     // multiply to get scenicScore
@@ -54,8 +54,9 @@ fun part2(input: List<String>): Int {
         val hori = tree.viewDistanceInDirection(row, colIndex)
         val vert = tree.viewDistanceInDirection(column, rowIndex)
         val scenicScore = hori * vert
+        if (scenicScore > maxScenicScore)
+            maxTree = colIndex + 1 to rowIndex + 1
         maxScenicScore = max(scenicScore, maxScenicScore)
-        maxTree = rowIndex to colIndex
     }
 
     println("maxTree = $maxTree")
@@ -66,15 +67,22 @@ private fun Int.viewDistanceInDirection(
     column: List<Int>,
     rowIndex: Int
 ): Int {
-    val direction = column.beforeAndAfter(
-        rowIndex
-    )
+    val direction = column.beforeAndAfter(rowIndex)
     val viewDistanceBefore = viewDistanceTo(direction.first.asReversed())
     val viewDistanceAfter = viewDistanceTo(direction.second)
     return viewDistanceBefore * viewDistanceAfter
 }
 
-private fun Int.viewDistanceTo(ints: List<Int>) = ints.takeWhile { it < this }.size
+private fun Int.viewDistanceTo(trees: List<Int>): Int {
+    return when (trees.size) {
+        0 -> 0
+        1 -> 1
+        2 -> if (this <= trees[0]) 1 else 2
+        3 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else 3
+        4 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else if (this <= trees[2]) 3 else 4
+        else -> -1
+    }
+}
 
 fun main() {
 
