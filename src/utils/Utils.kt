@@ -29,6 +29,11 @@ fun List<List<Int>>.prettyPrint() {
     println(joinToString("\n"))
 }
 
+fun <T> T.shouldNotBe(equalTo: T): T {
+    check(this != equalTo) { "Shouldn't be $equalTo" }
+    return this
+}
+
 fun List<List<Int>>.transposed(): List<List<Int>> {
     checkSquare()
     val copy = mutableListOf<MutableList<Int>>()
