@@ -56,6 +56,16 @@ private fun <E> Matrix<E>.checkSquare() {
 }
 
 
+operator fun <E> Matrix<E>.get(
+    rowIndex: Int,
+    colIndex: Int
+): Triple<List<E>, List<E>, E> {
+    val row = this[rowIndex]
+    val column = column(colIndex)
+    val tree = row[colIndex]
+    return Triple(row, column, tree)
+}
+
 fun List<Int>.beforeAndAfter(index: Int): Pair<List<Int>, List<Int>> {
     return subList(0, index) to subList(index + 1, size)
 }
