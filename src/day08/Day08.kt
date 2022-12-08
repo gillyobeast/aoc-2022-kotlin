@@ -9,6 +9,7 @@ fun part1(input: List<String>): Int {
     val matrix: List<List<Int>> = matrixOf(input)
 
     var visible = countVisible(matrix)
+    println()
     visible += countVisible(matrix.transposed())
 
 //    matrix.apply { prettyPrint() }
@@ -19,10 +20,15 @@ fun part1(input: List<String>): Int {
 
 private fun countVisible(matrix: List<List<Int>>): Int {
     var visible = 0
-    matrix.forEach { row ->
-        row.forEachIndexed { idx, value ->
-            if (row.subList(0, idx).all { it < value }
-                || row.subList(idx, row.size).all { it < value }) visible++
+    matrix.forEachIndexed { i, row ->
+        row.forEachIndexed { j, value ->
+//            println("row = ${row}")
+//            println("idx = ${idx}")
+            val before = row.subList(0, j)
+            val after = row.subList(j + 1, row.size)
+            print("${before} "); print("[$value]");println(" ${after}")
+            if (before.all { it < value }
+                || after.all { it < value }) visible++
         }
     }
     return visible
