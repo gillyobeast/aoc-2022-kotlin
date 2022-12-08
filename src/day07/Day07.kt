@@ -1,7 +1,7 @@
 package day07
 
-import appliedTo
-import readInput
+import utils.appliedTo
+import utils.readInput
 
 
 /// strategy:

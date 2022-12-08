@@ -1,3 +1,6 @@
+import utils.appliedTo
+import utils.readInput
+
 private fun <E> List<E>.toTriple(): Triple<E, E, E> {
     assert(this.size == 3)
     return Triple(this[0], this[1], this[2])

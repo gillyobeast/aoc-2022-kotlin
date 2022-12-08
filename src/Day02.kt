@@ -1,3 +1,6 @@
+import utils.appliedTo
+import utils.readInput
+
 enum class Shape(val score: Int) {
     ROCK(1),
     PAPER(2),

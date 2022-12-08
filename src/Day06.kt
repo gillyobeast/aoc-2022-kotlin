@@ -1,3 +1,6 @@
+import utils.appliedTo
+import utils.readInput
+
 fun main() {
 
     fun String.findIndexOfUniqueSubstring(ofLength: Int): Int {
@@ -14,7 +17,7 @@ fun main() {
     }
 
 // test if implementation meets criteria from the description, like:
-//    val testInput = readInput("input_test")
+//    val testInput = utils.readInput("input_test")
     val input = readInput("input")
 
 // part 1

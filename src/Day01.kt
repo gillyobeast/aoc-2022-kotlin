@@ -1,3 +1,6 @@
+import utils.appliedTo
+import utils.readInput
+
 fun main() {
     fun caloriesPerElf(input: List<String>): MutableList<Int> {
         val elvesCalories = mutableListOf<Int>()

@@ -1,3 +1,5 @@
+import utils.appliedTo
+import utils.readInput
 import java.util.*
 
 fun main() {
