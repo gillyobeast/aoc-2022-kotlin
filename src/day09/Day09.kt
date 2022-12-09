@@ -3,6 +3,7 @@ package day09
 import utils.appliedTo
 import utils.readInput
 import kotlin.math.abs
+import kotlin.math.sign
 
 enum class Move(val regex: Regex, val applyTo: (Point) -> Point) {
     UP("U \\d+".toRegex(), ::incrementY),
@@ -36,7 +37,7 @@ fun part1(input: List<String>): Int {
             headPosition = move.applyTo(headPosition)
 //            print("head = $headPosition ")
 
-            tailPosition = tailPosition.moveDiagonallyTowards(headPosition)
+            tailPosition = tailPosition.moveToward(headPosition)
 
 //            println("tail = $tailPosition")
 
@@ -67,8 +68,7 @@ fun part2(input: List<String>): Int {
             knots[0] = move.applyTo(knots[0])
 //            print("head = ${knots[0]}, ")
             for (i in 1..9) {
-
-                knots[i] = knots[i].moveDiagonallyTowards(knots[i - 1])
+                knots[i] = knots[i].moveToward(knots[i - 1])
 //                print("; $i = ${knots[i]}, ")
             }
 //            println()
@@ -84,19 +84,16 @@ fun part2(input: List<String>): Int {
     return tailVisitedPositions.size
 }
 
-private fun Point.moveDiagonallyTowards(other: Point): Point {
+private fun Point.moveToward(other: Point): Point {
     this.log("start ")
     other.log(", towards ")
     return if (this.isWithin1Of(other)) this
     else {
-        val x = first.moveToward(other.first)
-        val y = second.moveToward(other.second)
-        (x to y).log(", moving to ")
+        (first.moveToward(other.first) to second.moveToward(other.second)).log(", moving to ")
     }
 }
 
-private fun Int.moveToward(first1: Int) =
-    if (this == first1) this else if (this < first1) this + 1 else this - 1
+private fun Int.moveToward(first1: Int) = this + (first1 - this).sign
 
 
 private fun Point.isWithin1Of(headPosition: Point): Boolean {
