@@ -1,3 +1,5 @@
+package day09
+
 import utils.appliedTo
 import utils.readInput
 
@@ -15,7 +17,7 @@ fun main() {
     val input = readInput("input")
 
     // part 1
-    ::part1.appliedTo(testInput, returns = -1)
+    ::part1.appliedTo(testInput, returns = 13)
     println("Part 1: ${part1(input)}")
 
     // part 2
