@@ -31,45 +31,29 @@ fun part1(input: List<String>): Int {
     val tailVisitedPositions = mutableSetOf(tailPosition)
 
     moves.forEach { (move, step): Pair<Move, Int> ->
-        headPosition = move.apply(headPosition, step)
+        repeat(step) {
+            val previousHead = headPosition
+            headPosition = move.apply(headPosition, 1)
+            print("head = ${headPosition} ")
 
-        tailPosition = tailPosition.moveToward(headPosition)
+            tailPosition =
+                if (tailPosition.isWithin1Of(headPosition)) tailPosition
+                else previousHead
 
-        tailVisitedPositions.add(tailPosition)
+            println("tail = ${tailPosition}")
+
+            tailVisitedPositions.add(tailPosition)
+        }
     }
+    println(tailVisitedPositions)
 
     return tailVisitedPositions.size
 }
 
-private fun Pair<Int, Int>.moveToward(other: Pair<Int, Int>): Pair<Int, Int> {
-    if (closeInXTo(other)) {
-        return if (closeInYTo(other)) { // no need to move
-            this
-        } else { // in same x but need to move y towards other
-            this.first to this.second.moveToward(other.second)
-        }
-
-    } else if (closeInYTo(other)) { // in same y but need to move y towards other
-        return first.moveToward(other.first) to this.second
-    }else
-        return first.moveToward(other.first)
+private fun Pair<Int, Int>.isWithin1Of(headPosition: Pair<Int, Int>) =
+    abs(first - headPosition.first) <= 1 && abs(second - headPosition.second) <= 1
 
 
-}
-
-private fun Int.moveToward(other: Int) = this + distanceFrom(other)
-
-fun Pair<Int, Int>.closeInYTo(headPosition: Pair<Int, Int>): Boolean =
-    second.closeTo(headPosition.second)
-
-private fun Pair<Int, Int>.closeInXTo(headPosition: Pair<Int, Int>): Boolean =
-    first.closeTo(headPosition.first)
-
-private fun Int.closeTo(other: Int): Boolean {
-    return abs(distanceFrom(other)) <= 1
-}
-
-private fun Int.distanceFrom(other: Int) = other - this
 
 private fun incrementX(
     headPosition: Pair<Int, Int>,
