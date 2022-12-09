@@ -73,14 +73,13 @@ private fun Int.viewDistanceInDirection(
     return viewDistanceBefore * viewDistanceAfter
 }
 
-private fun Int.viewDistanceTo(trees: List<Int>): Int {
+fun Int.viewDistanceTo(trees: List<Int>): Int {
     return when (trees.size) {
-        0 -> 0
-        1 -> 1
-        2 -> if (this <= trees[0]) 1 else 2
-        3 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else 3
-        4 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else if (this <= trees[2]) 3 else 4
-        else -> -1
+        0, 1 -> trees.size
+        2 -> if (this <= trees[0]) 1 else trees.size
+        3 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else trees.size
+        4 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else if (this <= trees[2]) 3 else trees.size
+        else -> trees.takeWhile { this >= it }.size + 1
     }
 }
 
@@ -91,8 +90,8 @@ fun main() {
     val input = readInput("input")
 
     // part 1
-    ::part1.appliedTo(testInput, returns = 21)
-    println("Part 1: ${part1(input).shouldNotBe(equalTo = 1071)}")
+//    ::part1.appliedTo(testInput, returns = 21)
+//    println("Part 1: ${part1(input).shouldNotBe(equalTo = 1071)}")
 
 
     // part 2
