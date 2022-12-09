@@ -74,13 +74,10 @@ private fun Int.viewDistanceInDirection(
 }
 
 fun Int.viewDistanceTo(trees: List<Int>): Int {
-    return when (trees.size) {
-        0, 1 -> trees.size
-        2 -> if (this <= trees[0]) 1 else trees.size
-        3 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else trees.size
-        4 -> if (this <= trees[0]) 1 else if (this <= trees[1]) 2 else if (this <= trees[2]) 3 else trees.size
-        else -> trees.takeWhile { this >= it }.size + 1
-    }
+    return if (trees.any { it >= this })
+        trees.indexOfFirst { it >= this } + 1
+    else
+        trees.size
 }
 
 fun main() {
