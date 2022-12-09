@@ -6,10 +6,10 @@ import kotlin.math.abs
 import kotlin.math.sign
 
 enum class Move(val regex: Regex, val applyTo: (Point) -> Point) {
-    UP("U \\d+".toRegex(), ::incrementY),
-    DOWN("D \\d+".toRegex(), ::decrementY),
-    LEFT("L \\d+".toRegex(), ::decrementX),
-    RIGHT("R \\d+".toRegex(), ::incrementX);
+    UP("U \\d+".toRegex(), { it.first to it.second + 1 }),
+    DOWN("D \\d+".toRegex(), { it.first to it.second - 1 }),
+    LEFT("L \\d+".toRegex(), { it.first - 1 to it.second }),
+    RIGHT("R \\d+".toRegex(), { it.first + 1 to it.second });
 
     companion object {
         private val digits = "(\\d+)".toRegex()
@@ -103,22 +103,6 @@ private fun Point.isWithin1Of(headPosition: Point): Boolean {
 }
 
 private fun <T> T.log(s: String = ""): T = this//.also { print(s + it) }
-
-private fun incrementX(
-    headPosition: Point
-) = headPosition.first + 1 to headPosition.second
-
-private fun decrementX(
-    headPosition: Point
-) = headPosition.first - 1 to headPosition.second
-
-private fun decrementY(
-    headPosition: Point
-) = headPosition.first to headPosition.second - 1
-
-private fun incrementY(
-    headPosition: Point,
-) = headPosition.first to headPosition.second + 1
 
 fun main() {
 
